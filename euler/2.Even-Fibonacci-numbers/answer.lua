@@ -25,10 +25,6 @@ function filter(prod)
          return coroutine.create(function()
                 while true do
                 local x = receive(prod)
-                      if x == nil then
-                         send(x)
-                         break
-                      end
                       if x % 2 == 0 then
                          send(x)
                       end
@@ -43,7 +39,9 @@ function consumer(prod, max)
                sum = sum + x
                x = receive(prod)
          end
-         print(sum)
+         return sum
 end
 
-consumer(filter(producer()), 4000000)
+-- Fibonacci numbers: 1, 2, 3, 5, 8, 13, 21, 34, 55, 89, ...
+assert(consumer(filter(producer()), 100) == 2 + 8 + 34)
+print(consumer(filter(producer()), 4000000))
