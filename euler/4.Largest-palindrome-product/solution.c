@@ -36,9 +36,8 @@ int reverse_digits(int n)
 {
         assert(n >= 0);
         int reversed = 0;
-        while (n != 0) {
+        for (; n!=0; n/=10) {
                 reversed = reversed * 10 + (n % 10);
-                n /= 10;
         }
         return reversed;
 }
@@ -67,15 +66,18 @@ int find_largest_palindrome_product(int ndigits)
 
 int get_max_number_ndigits(int ndigits)
 {
+        assert(ndigits >= 0);
         return get_min_number_ndigits(ndigits + 1) - 1;
 }
 
 int get_min_number_ndigits(int ndigits)
 {
-        assert(ndigits > 0);
-        int n = 1;
-        int i;
-        for (i=0; i<ndigits-1; ++i)
+        int i, n;
+        
+        assert(ndigits >= 0);
+        if (ndigits == 0)
+                return 0;
+        for (n=1,i=0; i<ndigits-1; ++i)
                 n *= 10;
         return n;
 }
