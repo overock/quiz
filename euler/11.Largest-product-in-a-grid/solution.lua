@@ -28,17 +28,18 @@ height = #grid
 width = #grid[1]
 largest_product = 0
 
-function find_largest_product_finder(finder)
-   for y = finder.yfirst, finder.ylast do 
-      for x = finder.xfirst, finder.xlast do
+function make_finder(arg)
+   arg.find = function (self)
+   for y = self.yfirst, self.ylast do 
+      for x = self.xfirst, self.xlast do
          local product = 1
          for d = 0, length-1 do
-            local x2, y2 = finder.inc(x, y, d)
+            local x2, y2 = self.inc(x, y, d)
             product = product * grid[y2][x2]
          end
          if largest_product < product then
             largest_product = product
-            direction = finder.name
+            direction = self.name
             origin = {x=x, y=y}
          end
       end
@@ -46,7 +47,10 @@ function find_largest_product_finder(finder)
    return largest_product
 end
 
-right = {
+   return arg
+end
+
+right = make_finder {
    name = "right",
    xfirst = 1,
    xlast = width - (length - 1),
@@ -55,7 +59,7 @@ right = {
    inc = function (x, y, d) return x+d, y end
 }
 
-up = {
+up = make_finder {
    name = "up",
    xfirst = 1,
    xlast = width,
@@ -64,7 +68,7 @@ up = {
    inc = function (x, y, d) return x, y-d end
 }
 
-right_down = {
+right_down = make_finder {
    name = "right_down",
    xfirst = 1,
    xlast = width - (length - 1),
@@ -73,7 +77,7 @@ right_down = {
    inc = function (x, y, d) return x+d, y+d end
 }
 
-right_up = {
+right_up = make_finder {
    name = "right_up",
    xfirst = 1,
    xlast = width - (length - 1),
@@ -83,10 +87,7 @@ right_up = {
 }
 
 function find_largest_product()
-   return math.max(find_largest_product_finder(right),
-                   find_largest_product_finder(up),
-                   find_largest_product_finder(right_down),
-                   find_largest_product_finder(right_up))
+   return math.max(right:find(), up:find(), right_down:find(), right_up:find())
 end
 
 print(find_largest_product())
