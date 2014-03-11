@@ -10,8 +10,8 @@ typedef std::int64_t integer;
 bool is_prime(const std::set<integer>& primes, integer n)
 {
         auto iter = std::find_if(primes.begin(), primes.end(),
-                                 [&](integer x) { return n % x == 0;});
-        return iter == primes.end();
+                                 [&](integer x) { return x * x > n || n % x == 0;});
+        return iter == primes.end() || *iter * *iter > n;
 }
 
 void get_primes_below(integer max, std::set<integer>& primes)
