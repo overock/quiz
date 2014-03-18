@@ -29,6 +29,11 @@ function count_sundays_on_first_of_the_month_from_1900(to)
    local total_days = 0
    local sundays = 0
    function count_sundays(days)
+      --[[
+         1 Jan 1900 was a Monday.
+         Mon Tue Wed Thu Fri Sat Sun
+         1   2   3   4   5   6   7
+      ]]--
       if (days + 1) % 7 == 0 then
          sundays = sundays + 1
       end
