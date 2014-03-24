@@ -1,5 +1,6 @@
 #!/usr/bin/env lua
 
+require "functional"
 
 function  get_alphabetical_order(alpha)
    return string.find("ABCDEFGHIJKLMNOPQRSTUVWXYZ",  alpha:upper())
@@ -14,12 +15,8 @@ function calculate_name_score(name, index)
 end
 
 function sum_name_scores(names)
-   local sum = 0
    table.sort(names)
-   for i, v in ipairs(names) do
-      sum = sum + calculate_name_score(v, i)
-   end
-   return sum
+   return reduce(plus, map(calculate_name_score, names))
 end
 
 assert(calculate_name_score("COLIN", 938) == 49714)
