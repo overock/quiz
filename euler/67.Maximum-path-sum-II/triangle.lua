@@ -1,1 +1,1 @@
-triangle.lua
+../triangle.lua
