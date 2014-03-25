@@ -1,4 +1,4 @@
-#!env lua
+#!/usr/bin/env lua
 
 function multiples_of_3_or_5_rec(limit) -- recursive version
    local function iter(sum, first)
