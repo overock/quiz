@@ -16,7 +16,7 @@ end
 
 function sum_name_scores(names)
    table.sort(names)
-   return reduce(plus, map(calculate_name_score, names))
+   return reduce(plus, inverse_indexed_map(calculate_name_score, names))
 end
 
 assert(calculate_name_score("COLIN", 938) == 49714)
