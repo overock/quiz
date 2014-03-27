@@ -46,8 +46,7 @@ function last_lexicographic_permutation(arr)
 end
 
 function nth_lexicographic_permutation(n, ...)
-   local function iterate(head, n, arr)
-      local upper_bound = number_of_permutations(#arr)
+   local function iterate(head, n, arr, upper_bound)
       local divisor = upper_bound / #arr
       if upper_bound < n then
          return nil
@@ -65,12 +64,13 @@ function nth_lexicographic_permutation(n, ...)
          assert(r <= divisor)
          local neck = arr[q]
          table.remove(arr, q)
-         return iterate(head .. neck, r, arr)
+         return iterate(head .. neck, r, arr, divisor)
       end
    end
    local arr = {...}
    table.sort(arr)
-   return iterate("", n, arr)
+   local upper_bound = number_of_permutations(#arr)
+   return iterate("", n, arr, upper_bound)
 end
 
 result = lexicographic_permutations("0", "1", "2")
