@@ -48,21 +48,21 @@ end
 function nth_lexicographic_permutation(n, ...)
    local function iterate(head, n, arr)
       local upper_bound = number_of_permutations(#arr)
-      local stride = upper_bound / #arr
+      local divisor = upper_bound / #arr
       if upper_bound < n then
          return nil
       elseif upper_bound == n then
          return head .. last_lexicographic_permutation(arr)
       else
-         local r = n % stride
+         local r = n % divisor
          if r == 0 then
-            r = stride
+            r = divisor
          end
-         local q = (n - r) / stride + 1
+         local q = (n - r) / divisor + 1
          assert(q <= #arr)
          assert(q > 0)
          assert(r > 0)
-         assert(r <= stride)
+         assert(r <= divisor)
          local neck = arr[q]
          table.remove(arr, q)
          return iterate(head .. neck, r, arr)
