@@ -41,4 +41,16 @@ namespace large_number {
                 }
                 return s;
         }
+        
+        class Adder {
+        public:
+                void push_back(const std::string& x);
+                void clear();
+                std::string operator()();
+                bool empty() const;
+        private:
+                void resize();
+                std::string do_add(std::string* numbers, int size);
+                std::vector<std::string> m_numbers;
+        };
 }

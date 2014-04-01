@@ -3,32 +3,9 @@
 #include <vector>
 #include <algorithm>
 #include <iostream>
+#include "../large_number.hpp"
 
 #define NARRAY(arr) (sizeof(arr) / sizeof(arr[0]))
-
-std::string sum(std::string* numbers, int size)
-{
-        using namespace std;
-        
-        int len = numbers[0].size();
-        string sum;
-        int carrying = 0;
-
-        for (int i=0; i<len; ++i) {
-                for (string* number=numbers; number!=numbers+size; ++number) {
-                        carrying += number->back() - '0';
-                        number->pop_back();
-                }
-                sum.push_back((carrying % 10) + '0');
-                carrying /= 10;
-        }
-        while (carrying != 0) {
-                sum.push_back((carrying % 10) + '0');
-                carrying /= 10;
-        }
-        reverse(sum.begin(), sum.end());
-        return sum;
-}
 
 int main()
 {
@@ -134,6 +111,10 @@ int main()
                 "20849603980134001723930671666823555245252804609722",
                 "53503534226472524250874054075591789781264330331690"
         };
-        std::string s = sum(numbers, NARRAY(numbers));
-        std::cout << s.substr(0, 10) << std::endl;
+        large_number::Adder adder;
+        for (std::size_t i=0; i<NARRAY(numbers); ++i) {
+                adder.push_back(numbers[i]);
+        }
+        std::string sum = adder();
+        std::cout << sum.substr(0, 10) << std::endl;
 }
