@@ -3,33 +3,27 @@
 #include <iostream>
 #include <algorithm>
 #include <numeric>
-#include <set>
+#include <vector>
 
 typedef std::int64_t integer;
 
-bool is_prime(const std::set<integer>& primes, integer n)
-{
-        auto iter = std::find_if(primes.begin(), primes.end(),
-                                 [&](integer x) { return x * x > n || n % x == 0;});
-        return iter == primes.end() || *iter * *iter > n;
-}
-
-void get_primes_below(integer max, std::set<integer>& primes)
-{
-        integer begin = 2;
-        integer end = max;
-        primes.clear();
-        for (integer i=begin; i<end; ++i) {
-                if (is_prime(primes, i))
-                        primes.insert(i);
-        }
-}
-
 integer summation_primes_below(integer max)
 {
-        std::set<integer> primes;
-        get_primes_below(max, primes);
-        return std::accumulate(primes.begin(), primes.end(), static_cast<integer>(0));
+        // Sieve of Eratosthenes
+        std::vector<integer> primes(max+1, 0);
+        for (integer i=2; i<primes.size(); ++i)
+                primes[i] = i;
+
+        integer sum = 0;
+        for (integer i=2; i<primes.size(); ++i) {
+                if (primes[i] == 0)
+                        continue;
+                sum += i;
+                for (integer m=i*2; m<primes.size(); m+=i) {
+                        primes[m] = 0;
+                }
+        }
+        return sum;
 }
 
 int main()
