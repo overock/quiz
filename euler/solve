@@ -1,0 +1,22 @@
+#!/bin/sh
+
+if [ -z "$1" ]
+then
+    echo "usage $0 problem-number"
+    exit 1
+fi
+
+dir=$1.$(./problem $1 | sed -ne '1p' | perl -pe 's/^#\s+//; s/\s+/-/')
+
+if [ ! -d $dir ]
+then
+    mkdir $dir
+fi
+
+./problem $1 >$dir/problem.md
+
+sol=$dir/solution.lua
+touch $sol
+chmod 755 $sol
+emacs $sol
+
