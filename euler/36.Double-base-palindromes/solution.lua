@@ -4,23 +4,47 @@ function send(...)
    coroutine.yield(...)
 end
 
-function generator()
-   function worker () 
+function isodd(n)
+   return n % 2 == 1
+end
+
+function generator(max)
+   ndigits = string.len(tostring(max))
+   local function check_and_send(x)
+      if x <= max then
+         send(x)
+      end
+   end
+   local function worker ()
       for n = 1, 9 do
-         send(n)
+         check_and_send(n)
       end
-      for n = 1, 999 do
-         local s = tostring(n)
-         local r = string.reverse(s)
-         send(tonumber(s .. r))
-      end
-      for n = 1, 99 do
-         local s = tostring(n)
-         local r = string.reverse(s)
-         for m = 0, 9 do
-            send(tonumber(s .. m .. r))
+      if isodd(ndigits) then
+         local k = (ndigits - 1) / 2
+         for n = 1, 10^k-1 do
+            local s = tostring(n)
+            local r = string.reverse(s)
+            check_and_send(tonumber(s .. r))
+            for m = 0, 9 do
+               check_and_send(tonumber(s .. m .. r))
+            end
+         end
+      else
+         local k = ndigits / 2
+         for n = 1, 10^k-1 do
+            local s = tostring(n)
+            local r = string.reverse(s)
+            check_and_send(tonumber(s .. r))
+         end
+         for n = 1, 10^(k-1)-1 do
+            local s = tostring(n)
+            local r = string.reverse(s)
+            for m = 0, 9 do
+               check_and_send(tonumber(s .. m .. r))
+            end
          end
       end
+      
    end
    return coroutine.wrap(worker)
 end
@@ -28,10 +52,6 @@ end
 
 function ispalindromic(s)
    return string.reverse(s) == s
-end
-
-function isodd(n)
-   return n % 2 == 1
 end
 
 function tobinary(n)
@@ -49,17 +69,8 @@ end
 assert(tobinary(0) == '0')
 assert(tobinary(585) == '1001001001')
 
-function generator2()
-   return coroutine.wrap(
-      function()
-         for n = 1, 1000 * 1000 do
-            send(n)
-         end
-   end)
-end
-
 function filter(gen)
-   function worker()
+   local function worker()
       while true do
          local n = gen()
          if n == nil then
@@ -73,8 +84,18 @@ function filter(gen)
    return coroutine.wrap(worker)
 end
 
+
+function generator2(b, e, s)
+   return coroutine.wrap(
+      function()
+         for n = b, e, (s or 1) do
+            send(n)
+         end
+   end)
+end
+
 function filter2(gen)
-   function worker()
+   local function worker()
       while true do
          local n = gen()
          if n == nil then
@@ -96,11 +117,13 @@ function adder(gen)
       if x == nil then
          break
       end
-      --print(x, tobinary(x))
+      print(x, tobinary(x))
       sum = sum + x
    end
    return sum
 end
 
-print(adder(filter(generator())))
---print(adder(filter2(filter(generator2()))))
+
+
+print(adder(filter(generator(1000*1000-1))))
+--print(adder(filter2(filter(generator2(1, 1000*1000-1)))))
