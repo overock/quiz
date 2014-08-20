@@ -20,7 +20,7 @@ int main(int argc, char* argv[])
                 digits.push_back(to_digit(*argv[i]));
         }
         if (digits.size() < 2) {
-                cerr << "usage: " << argv[0] << " a1 a2 ...\n";
+                cerr << "usage: " << argv[0] << " digit digit ...\n";
                 return EXIT_FAILURE;
         }
         cout << minsum(digits) << endl;
